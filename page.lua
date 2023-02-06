@@ -1,5 +1,6 @@
 -- Parameters
 local tips_dir = arg[1] or 'tips'
+local site_dir = arg[2] or '_site'
 
 local ls = pandoc.system.list_directory
 local join = pandoc.path.join
@@ -15,7 +16,7 @@ local css = [[
   padding-bottom: 1em;
 }
 .tag {
-  background-color: #b8b8b8;
+  background-color: #e0e4e8;
   border-radius: 0.75ex;
   display: inline-block;
   padding: 0.33ex 1ex;
@@ -63,11 +64,19 @@ local meta = {
 local doc = pandoc.Pandoc({}, meta)
 
 for i, path in pairs(ls(tips_dir)) do
-  doc.blocks:extend(readtip(join{tips_dir, path}))
+  if select(2, pandoc.path.split_extension(path)) == '.md' then
+    doc.blocks:extend(readtip(join{tips_dir, path}))
+  end
 end
+
+-- fill and write mediabag
+doc = pandoc.mediabag.fill(doc)
+pandoc.mediabag.write(site_dir)
 
 local opts = pandoc.WriterOptions{
   template = pandoc.template.compile(pandoc.template.default 'html5')
 }
 
-print(pandoc.write(doc, 'html5', opts))
+local outfh = io.open(join{site_dir, 'index.html'}, 'w')
+outfh:write(pandoc.write(doc, 'html5', opts))
+outfh:close()
