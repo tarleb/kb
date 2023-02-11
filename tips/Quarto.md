@@ -1,7 +1,12 @@
 ---
 title: Quarto
 tags:
-- Quarto
+- quarto
+- quarto-extension
+- quarto-template
+- pandoc
+- markdown
+- rmarkdown
 ---
 
 [Quarto] is an open-source scientific and technical publishing system.
