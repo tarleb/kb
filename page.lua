@@ -25,14 +25,22 @@ local css = [[
 </style>
 ]]
 
+local script = [[
+<script src="tips.js" async="" type="text/javascript">
+</script>
+]]
+
 local function tag_span (tip)
   return pandoc.Span(tip, {class='tag'})
 end
 
+local function readfile (path)
+  local fh <close> = io.open(path, 'r')
+  return fh:read 'a'
+end
+
 local function readtip (filepath)
-  local fh <close> = io.open(filepath, 'r')
-  -- local fh = io.open(filepath, 'r')
-  local doc = pandoc.read(fh:read('a'))
+  local doc = pandoc.read(readfile(filepath))
   if pandoc.utils.type(doc.meta.tags) == 'List' then
     doc.blocks:insert(
       1,
@@ -59,6 +67,9 @@ local meta = {
   ['header-includes'] = {
     pandoc.RawBlock('html', css)
   },
+  ['include-after'] = {
+    pandoc.RawBlock('html', script)
+  },
   linestretch = 1.2,
 }
 local doc = pandoc.Pandoc({}, meta)
@@ -71,6 +82,7 @@ end
 
 -- fill and write mediabag
 doc = pandoc.mediabag.fill(doc)
+pandoc.mediabag.insert('tips.js', 'text/javascript', readfile('tips.js'))
 pandoc.mediabag.write(site_dir)
 
 local opts = pandoc.WriterOptions{
