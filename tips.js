@@ -11,10 +11,9 @@ function filterByTag(tagname) {
     console.log([...selectedTags]);
     document.querySelectorAll('.tip').forEach(tip => {
         const tags = (tip.dataset.tags || '').split(',');
-        for (const selected of selectedTags.values()) {
-            // Hide tips that don't have this tag.
-            tip.hidden = tags.indexOf(selected) === -1;
-        }
+        tip.hidden = [...selectedTags].some(st =>
+            tags.indexOf(st) === -1
+        );
     });
     document.querySelectorAll('.tag').forEach(tag => {
         if (selectedTags.has(tag.innerText)) {
