@@ -5,7 +5,7 @@ tags:
   - CommonMark
   - gfm
   - emoji
-  - extension
+  - format extension
 ---
 
 The `emoji` extension gives simple access to a large set of emojis via the `:smile:` syntax.
