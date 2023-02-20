@@ -2,6 +2,8 @@
 local tips_dir = arg[1] or 'tips'
 local site_dir = arg[2] or '_site'
 
+local template_file = 'template.html'
+
 local join, split_extension, filename = pandoc.path.join,
   pandoc.path.split_extension, pandoc.path.filename
 local ls = pandoc.system.list_directory
@@ -85,21 +87,21 @@ local meta = {
   },
   linestretch = 1.2,
 }
-local doc = pandoc.Pandoc({}, meta)
 
+local div = pandoc.Div({}, {class="tips"})
 for i, path in pairs(ls(tips_dir)) do
   if select(2, split_extension(path)) == '.md' then
-    doc.blocks:extend(readtip(join{tips_dir, path}))
+    div.content:extend(readtip(join{tips_dir, path}))
   end
 end
 
 -- fill and write mediabag
-doc = pandoc.mediabag.fill(doc)
+local doc = pandoc.mediabag.fill(pandoc.Pandoc({div}, meta))
 pandoc.mediabag.insert('tips.js', 'text/javascript', readfile('tips.js'))
 pandoc.mediabag.write(site_dir)
 
 local opts = pandoc.WriterOptions{
-  template = pandoc.template.compile(pandoc.template.default 'html5')
+  template = pandoc.template.compile(readfile(template_file))
 }
 
 local outfh = io.open(join{site_dir, 'index.html'}, 'w')
