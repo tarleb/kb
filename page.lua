@@ -51,6 +51,12 @@ end
 
 local function readtip (filepath)
   local doc = pandoc.read(readfile(filepath))
+  if doc.meta.title then
+    doc.blocks:insert(
+      1,
+      pandoc.Header(2, doc.meta.title)
+    )
+  end
   local tip_id = 'tip-' .. split_extension(filename(filepath))
   local tags = pandoc.utils.type(doc.meta.tags) == 'List'
     and doc.meta.tags:map(stringify)
@@ -62,12 +68,6 @@ local function readtip (filepath)
       {class='tags'}
     )
   )
-  if doc.meta.title then
-    doc.blocks:insert(
-      1,
-      pandoc.Header(2, doc.meta.title)
-    )
-  end
   local tip_attr = {
     id = tip_id,
     class = 'tip',
