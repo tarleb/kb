@@ -1,16 +1,14 @@
 ---
-title: Pandoc nightly
+title: Download a nightly
 tags:
 - version
 - download
 - nightly
 ---
 
-# Download a nightly
-
 If you're a pandoc user in need of a version that includes a recent bug fix, or
 wants to test a feature recently added to the development version, download a
-nightly. 
+nightly.
 
 Binaries of the current pandoc development version are
 created every 24 hours-- to access them,
